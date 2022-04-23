@@ -7,6 +7,9 @@ using FCT_test.Inteface;
 
 namespace FCT_test.Model
 {
+    /// <summary>
+    /// Абстрактный класс для фабрик
+    /// </summary>
     public abstract class AbstractFactory : IProductFactory
     {
         public string Name { get; private set; }
@@ -23,7 +26,13 @@ namespace FCT_test.Model
         {
             return Product;
         }
-
+        /// <summary>
+        /// Метод для создания продукта
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="packageType"></param>
+        /// <param name="weight"></param>
+        /// <returns></returns>
         public Product MakeProduct(string name, string packageType, int weight)
         {
             var product = new Product(name, packageType, weight);

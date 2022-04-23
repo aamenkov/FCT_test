@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace FCT_test.Model
 {
+    /// <summary>
+    /// Синглтон класс для склада
+    /// </summary>
     public class Stock
     {
         private static Stock instanceStock; 
@@ -32,7 +35,11 @@ namespace FCT_test.Model
             return instanceStock;
         }
 
-        public void Put(Transaction transaction) //заменить на транзакцию получается
+        /// <summary>
+        /// Метод для добавления новой продукции на склад
+        /// </summary>
+        /// <param name="transaction"></param>
+        public void Put(Transaction transaction)
         {
             bool isExist = false;
             foreach (KeyValuePair<string, int> pair in Dictionary)

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace FCT_test.Model
 {
+    /// <summary>
+    /// Абстрактный класс для продуктов
+    /// </summary>
     public abstract class AbstractProduct
     {
         public string Name { get; private set; }

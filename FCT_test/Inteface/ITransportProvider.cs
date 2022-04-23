@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace FCT_test.Inteface
 {
+    /// <summary>
+    /// Интерфейс для разгрузки склада
+    /// </summary>
     public interface ITransportProvider
     {
         public void Transport();

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace FCT_test.Model
 {
+    /// <summary>
+    /// Вспомогательный класс для продукции на складе
+    /// </summary>
     public class Transaction
     {
         public string FactoryName { get; private set; }

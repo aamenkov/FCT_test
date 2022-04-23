@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace FCT_test.Model
 {
+    /// <summary>
+    /// Абстрактный класс для грузовых машин
+    /// </summary>
     public abstract class AbstractTruck
     {
         public string Name { get; private set; }

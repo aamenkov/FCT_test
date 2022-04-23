@@ -7,6 +7,9 @@ using FCT_test.Model;
 
 namespace FCT_test.Inteface
 {
+    /// <summary>
+    /// Интерфейс создания продукта
+    /// </summary>
     public interface IProductFactory
     {
         public Product MakeProduct(string name, string packageType, int weight);
