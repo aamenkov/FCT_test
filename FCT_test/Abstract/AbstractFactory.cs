@@ -9,9 +9,9 @@ namespace FCT_test.Model
 {
     public abstract class AbstractFactory : IProductFactory
     {
-        private string Name { get; }
-        private int Performance { get; }
-        private Product Product { get; set; } // сделать паблик?
+        public string Name { get; private set; }
+        public int Performance { get; private set; }
+        public Product Product { get; private set; }
 
         protected AbstractFactory(string name, int performance)
         {
@@ -19,20 +19,15 @@ namespace FCT_test.Model
             Performance = performance;
         }
 
-        public Product MakeProduct() // нужно ли это?
+        public Product MakeProduct()
         {
             return Product;
         }
 
-        public void MakeProduct(Product product) // нужно ли это?
+        public Product MakeProduct(string name, string packageType, int weight)
         {
+            var product = new Product(name, packageType, weight);
             Product = product;
-        }
-
-        public Product MakeProduct(string name, string packageType, int weight) // нужно ли это?
-        {
-            Product product = new Product(name, packageType, weight);
-            MakeProduct(product);
             return product;
         }
 

@@ -8,9 +8,9 @@ namespace FCT_test.Model
 {
     public abstract class AbstractTruck
     {
-        private string Name { get; }
+        public string Name { get; private set; }
         public int Capacity { get; private set; }
-        private int MaxCapacity { get; }
+        public int MaxCapacity { get; private set; }
 
         protected AbstractTruck(string name, int maxCapacity)
         {

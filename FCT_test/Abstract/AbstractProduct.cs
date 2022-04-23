@@ -8,8 +8,8 @@ namespace FCT_test.Model
 {
     public abstract class AbstractProduct
     {
-        private string Name { get; }
-        private string PackageType { get; }
+        public string Name { get; private set; }
+        public string PackageType { get; private set; }
         public int Weight { get; private set; }
 
         protected AbstractProduct(string name, string packageType, int weight)

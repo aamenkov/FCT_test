@@ -12,14 +12,17 @@ namespace FCT_test.Implements
     {
         private Stock stock = Model.Stock.GetInstance("SimpleStock");
 
-        public void Stock(Product product)
+        public void Stock(Transaction transaction)
         {
-            if (stock.Capacity > 0.95 * stock.MaxCapacity )
+            stock.Put(transaction);
+
+            if (stock.Capacity > 0.95 * stock.MaxCapacity)
             {
                 // TODO: машинки поехали
                 // заполняется ли в это время склад...
+
             }
-            stock.Put(product);
         }
+
     }
 }

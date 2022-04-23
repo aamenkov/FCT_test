@@ -11,16 +11,19 @@ namespace FCT_test
         {
             var logger = LogManager.GetCurrentClassLogger();
 
-            Factory factory = new Factory("Factory", 110);
-            Product product = factory.MakeProduct("Product", "Plastic", 2);
+            var factory = new Factory("FactoryA", 110);
+            var product = factory.MakeProduct("ProductA", "Plastic", 2);
 
             logger.Info(factory.ToString());
-            Stock stock = Stock.GetInstance("Simple");
+            var stock = Stock.GetInstance("Simple");
 
             logger.Info(stock.ToString());
-            StockProvider stockProvider = new StockProvider();
-            stockProvider.Stock(factory.MakeProduct());
-            logger.Info(stock.ToString());
+            var stockProvider = new StockProvider();
+
+            var transaction = new Transaction(factory);
+            stockProvider.Stock(transaction);
+
+            logger.Info("TO STOCK: " + transaction.ToString());
 
         }
     }
