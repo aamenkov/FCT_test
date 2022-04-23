@@ -1,5 +1,7 @@
 ﻿using System;
+using FCT_test.Implements;
 using FCT_test.Model;
+using NLog;
 
 namespace FCT_test
 {
@@ -7,15 +9,19 @@ namespace FCT_test
     {
         static void Main(string[] args)
         {
+            var logger = LogManager.GetCurrentClassLogger();
+
             Factory factory = new Factory("Factory", 110);
             Product product = factory.MakeProduct("Product", "Plastic", 2);
-            Console.WriteLine(factory.ToString());
 
+            logger.Info(factory.ToString());
             Stock stock = Stock.GetInstance("Simple");
 
-            Console.WriteLine(stock.ToString());
-            stock.Put(product);
-            Console.WriteLine(stock.ToString());
+            logger.Info(stock.ToString());
+            StockProvider stockProvider = new StockProvider();
+            stockProvider.Stock(factory.MakeProduct());
+            logger.Info(stock.ToString());
+
         }
     }
 }
