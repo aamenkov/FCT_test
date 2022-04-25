@@ -10,11 +10,15 @@ namespace FCT_test.Implements
 {
     public class TransportProvider : ITransportProvider
     {
-        private Stock stock = Model.Stock.GetInstance("SimpleStock");
-
-        public void Transport()
+        private Stock stock = Model.Stock.GetInstance("", 0);
+        public void Transport(AbstractTruck truck)
         {
+            // разгрузка склада
 
+            if (stock.Capacity > 0)
+            {
+                stock.LoadCar(truck);
+            }
         }
     }
 }

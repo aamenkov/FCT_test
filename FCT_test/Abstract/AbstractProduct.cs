@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FCT_test.Model
 {
     /// <summary>
-    /// Абстрактный класс для продуктов
+    /// Абстрактный класс для продуктов, которые выпускает фабрика
     /// </summary>
     public abstract class AbstractProduct
     {

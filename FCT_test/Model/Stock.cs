@@ -13,24 +13,24 @@ namespace FCT_test.Model
     public class Stock
     {
         private static Stock instanceStock; 
-        private string Name { get; }
+        public string Name { get; }
         public int Capacity { get; private set; }
         public int MaxCapacity { get; }
-        private ConcurrentDictionary<string, int> Dictionary { get; }
+        private ConcurrentDictionary<Product, int> Dictionary { get; } 
 
         private Stock(string name, int maxCapacity)
         {
             Name = name;
             Capacity = 0;
             MaxCapacity = maxCapacity;
-            Dictionary = new ConcurrentDictionary<string, int>();
+            Dictionary = new ConcurrentDictionary<Product, int>();
         }
 
-        public static Stock GetInstance(string name)
+        public static Stock GetInstance(string name, int maxCapacity)
         {
             if (instanceStock == null)
             {
-                instanceStock = new Stock(name, 1000);
+                instanceStock = new Stock(name, maxCapacity);
             }
             return instanceStock;
         }
@@ -41,23 +41,42 @@ namespace FCT_test.Model
         /// <param name="transaction"></param>
         public void Put(Transaction transaction)
         {
-            bool isExist = false;
-            foreach (KeyValuePair<string, int> pair in Dictionary)
+            if (Dictionary.TryGetValue(transaction.Product, out var val))
             {
-                if (transaction.ProductName.Equals(pair.Key))
-                {
-                    isExist = true;
-                }
+                Dictionary[transaction.Product] = val + transaction.Count;
             }
-            if (isExist == false)
+            else
             {
-                Dictionary.TryAdd(transaction.ProductName, transaction.Count);
+                Dictionary.TryAdd(transaction.Product, transaction.Count);
             }
+
             Capacity += transaction.TotalWeight;
 
             if (Capacity > MaxCapacity)
             {
                 Capacity = MaxCapacity;
+            }
+
+        }
+
+        /// <summary>
+        /// Метод загрузки машины до конца
+        /// </summary>
+        /// <param name="truck"></param>
+        public void LoadCar(AbstractTruck truck)
+        {
+            foreach (var pair in Dictionary)
+            {
+                while (pair.Key.Weight < truck.MaxCapacity - truck.Capacity)
+                {
+                    if (pair.Value > 0)
+                    { 
+                        truck.AddProduct(pair.Key);
+                        Dictionary.TryGetValue(pair.Key, out var val);
+                        Dictionary[pair.Key] = val - 1;
+                        Capacity = Capacity - pair.Key.Weight;
+                    }
+                }
             }
         }
 
@@ -65,5 +84,16 @@ namespace FCT_test.Model
         {
             return $"[StockName: {Name}, Capacity: {Capacity}, MaxCapacity: {MaxCapacity}]";
         }
+
+        public string FullInfoToString()
+        {
+            string dictionaryString = ToString() + " Dictionary: {";
+            foreach (var keyValues in Dictionary)
+            {
+                dictionaryString += keyValues.Key + " : " + keyValues.Value + ", ";
+            }
+            return dictionaryString.TrimEnd(',', ' ') + "}";
+        }
+
     }
 }

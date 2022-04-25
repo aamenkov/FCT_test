@@ -33,11 +33,15 @@ namespace FCT_test.Model
         /// <param name="packageType"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public Product MakeProduct(string name, string packageType, int weight)
+        public void MakeProduct(string name, string packageType, int weight)
         {
             var product = new Product(name, packageType, weight);
             Product = product;
-            return product;
+        }
+
+        public Transaction MakeTransaction()
+        {
+            return new Transaction(Name, Product, Performance, Product.Weight * Performance);
         }
 
         public override string ToString()

@@ -10,7 +10,7 @@ namespace FCT_test.Implements
 {
     public class StockProvider : IStockProvider
     {
-        private Stock stock = Model.Stock.GetInstance("SimpleStock");
+        private Stock stock = Model.Stock.GetInstance("", 0);
 
         public void Stock(Transaction transaction)
         {

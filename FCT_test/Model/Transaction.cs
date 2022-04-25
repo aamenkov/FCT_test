@@ -12,21 +12,29 @@ namespace FCT_test.Model
     public class Transaction
     {
         public string FactoryName { get; private set; }
-        public string ProductName { get; private set; }
+        public Product Product { get; private set; }
         public int Count { get; private set; }
         public int TotalWeight { get; private set; }
 
         public Transaction(AbstractFactory factory)
         {
             FactoryName = factory.Name;
-            ProductName = factory.Product.Name;
+            Product = factory.Product;
             Count = factory.Performance;
             TotalWeight = factory.Product.Weight * Count;
         }
 
+        public Transaction(string factoryName, Product product, int count, int totalWeight)
+        {
+            FactoryName = factoryName;
+            Product = product;
+            Count = count;
+            TotalWeight = totalWeight;
+        }
+
         public override string ToString()
         {
-            return $"[FactoryName: {FactoryName}, ProductName: {ProductName}, Count: {Count}, TotalWeight: {TotalWeight}]";
+            return $"[FactoryName: {FactoryName}, [ProductName: {Product.Name}, PackageType: {Product.PackageType}, Weight: {Product.Weight}], Count: {Count}, TotalWeight: {TotalWeight}]";
         }
     }
 }
