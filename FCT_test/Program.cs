@@ -21,7 +21,7 @@ namespace FCT_test
             var stockMaxCapacity = (int)(stockCoef * 1.5 * (productsPerHour * (1 - Math.Pow(q, factoryCount)) / (1 - q)));
 
             var stock = Stock.GetInstance("MainStock", stockMaxCapacity);
-            logger.Info(stock.ToString());
+            //logger.Info(stock.ToString());
             //logger.Info(stock.FullInfoToString());
 
             //Thread threadIn = new Thread(Zapolnenie);
@@ -30,11 +30,11 @@ namespace FCT_test
             //threadOut.Start();
 
             logger.Info(stock.FullInfoToString());
-            Zapolnenie();
+           // Zapolnenie();
             logger.Info(stock.FullInfoToString());
             logger.Info(stock.FullInfoToString());
             logger.Info(stock.FullInfoToString());
-            Razgruzka();
+           // Razgruzka();
             logger.Info(stock.FullInfoToString());
         }
 
@@ -83,9 +83,9 @@ namespace FCT_test
                     isEmpty = transportProvider.Transport(truck);
                     logger.Info("TO SHOP: " + truck.ToString());
                     Stock stock = Model.Stock.GetInstance("", 0);
-                    logger.Info("AfterShop: " + stock.FullInfoToString());
+                   // logger.Info("AfterShop: " + stock.FullInfoToString());
                 }
-                Stock stock1 = Model.Stock.GetInstance("", 0);
+                //Stock stock1 = Model.Stock.GetInstance("", 0);
                 //logger.Info("AfterForEach: " + stock1.FullInfoToString());
             }
         }

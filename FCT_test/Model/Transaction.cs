@@ -34,7 +34,7 @@ namespace FCT_test.Model
 
         public override string ToString()
         {
-            return $"[FactoryName: {FactoryName}, [ProductName: {Product.Name}, PackageType: {Product.PackageType}, Weight: {Product.Weight}], Count: {Count}, TotalWeight: {TotalWeight}]";
+            return $"[FactoryName: {FactoryName}, " + Product.Name + $", Count: {Count}, TotalWeight: {TotalWeight}]";
         }
     }
 }

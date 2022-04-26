@@ -42,9 +42,18 @@ namespace FCT_test.Model
                 Capacity = MaxCapacity;
             }
         }
-        public override string ToString()
+        public string InfoToString()
         {
             return $"[TruckName: {Name}, Capacity: {Capacity}, MaxCapacity: {MaxCapacity}]";
+        }
+        public override string ToString()
+        {
+            var dictionaryString = InfoToString() + " Dictionary: {";
+            foreach (var keyValues in Dictionary)
+            {
+                dictionaryString += keyValues.Key + " : " + keyValues.Value + ", ";
+            }
+            return dictionaryString.TrimEnd(',', ' ') + "}";
         }
     }
 }
