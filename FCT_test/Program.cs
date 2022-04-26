@@ -10,50 +10,42 @@ namespace FCT_test
 {
     internal class Program
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static int factoryCount = 3;
-        private static int trucksCount = 2;
-        private static int productsPerHour = 100;
-        private static int stockCoef = 100;
-        static void Main(string[] args)
-        {
-            var q = productsPerHour * 1.1 / productsPerHour;
-            var stockMaxCapacity = (int)(stockCoef * 1.5 * (productsPerHour * (1 - Math.Pow(q, factoryCount)) / (1 - q)));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly int _factoryCount = 3;
+        private static readonly int _trucksCount = 2;
+        private static readonly int _productsPerHour = 100;
+        private static readonly int _stockCoeff = 100;
 
+        private static void Main(string[] args)
+        {
+
+            const double q = 1.1;
+            var stockMaxCapacity = (int)(_stockCoeff * 1.5 * (_productsPerHour * (1 - Math.Pow(q, _factoryCount)) / (1 - q)));
+            // создание склада
             var stock = Stock.GetInstance("MainStock", stockMaxCapacity);
             
-            var factoryList = new List<Factory>();
-            for (var i = 0; i < factoryCount; i++)
+            // создание фабрик
+            var factoriesList = new List<Factory>();
+            for (var i = 0; i < _factoryCount; i++)
             {
-                var factory = new Factory("Factory" + i, (int)(productsPerHour * (1 + (double)i / 10)));
-                factory.MakeProduct("Product" + i, "Plastic" + i, i % 2 + 1);
-                factoryList.Add(factory);
-                logger.Info("FACTORY: " + factory.ToString());
+                var factory = new Factory("Factory" + i, (int)(_productsPerHour * (1 + (double)i / 10)));
+                factory.MakeProduct("Product" + i, "Package" + i, i % 2 + 1);
+                factoriesList.Add(factory);
+                Logger.Info("FACTORY: " + factory.ToString());
             }
 
-            ThreadPool.QueueUserWorkItem(new WaitCallback(Zapolnenie), factoryList);
-            // ThreadPool.QueueUserWorkItem(new WaitCallback(Razgruzka));
+            // запуск пулла потоков с загрузкой
+            ThreadPool.QueueUserWorkItem(new WaitCallback(Loading), factoriesList);
 
-            //logger.Info(stock.ToString());
-            //logger.Info(stock.FullInfoToString());
-
-            //Thread threadIn = new Thread(Zapolnenie);
-            //threadIn.Start();
-
-            Thread threadOut = new Thread(Razgruzka);
+            // создание и запуск потока с разгрузкой
+            var threadOut = new Thread(Unloading);
             threadOut.Start();
-
-
-            //logger.Info(stock.FullInfoToString());
-           // Zapolnenie();
-           // Razgruzka();
-            //logger.Info(stock.FullInfoToString());
         }
 
-        static void Zapolnenie(Object stateInfo)
+        private static void Loading(object stateInfo)
         {
             var stockProvider = new StockProvider();
-            List<Factory> factoryList = (List<Factory>)stateInfo;
+            var factoryList = (List<Factory>)stateInfo;
 
             var isFull = false;
             while (!isFull)
@@ -62,12 +54,11 @@ namespace FCT_test
                 {
                     var transaction = factory.MakeTransaction();
                     isFull = stockProvider.Stock(transaction);
-                    logger.Info("TO STOCK: " + transaction.ToString());
+                    Logger.Info("TO STOCK: " + transaction.ToString());
                 }
             }
         }
-
-        static void Razgruzka()
+        private static void Unloading(object stateInfo)
         {
             var transportProvider = new TransportProvider();
 
@@ -76,25 +67,20 @@ namespace FCT_test
             {
                 var truckList = new List<Truck>();
 
-                for (var y = 0; y < trucksCount; y++)
+                for (var y = 0; y < _trucksCount; y++)
                 {
-                    var truck = new Truck("Truck" + y, (int)(productsPerHour * (1 + (double)y / 3)));
+                    var truck = new Truck("Truck" + y, (int)(_productsPerHour * (1 + (double)y / 3)));
                     truckList.Add(truck);
-                    //logger.Info("TRUCK: " + truck.ToString());
                 }
 
                 foreach (var truck in truckList)
                 {
                     isEmpty = transportProvider.Transport(truck);
-                    logger.Info("TO SHOP: " + truck.ToString());
-                   // Stock stock = Model.Stock.GetInstance("", 0);
-                   // logger.Info("AfterShop: " + stock.FullInfoToString());
+                    Logger.Info("TO SHOP: " + truck.ToString());
                 }
-                Stock stock1 = Model.Stock.GetInstance("", 0);
-                logger.Info("AfterTruckGroup: " + stock1.FullInfoToString());
+                //var stock = Model.Stock.GetInstance("", 0);
+                //Logger.Info("StockAfterTruckGroup: " + stock.FullInfoToString());
             }
         }
-
     }
-
 }

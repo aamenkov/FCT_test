@@ -22,10 +22,6 @@ namespace FCT_test.Model
             Performance = performance;
         }
 
-        public Product MakeProduct()
-        {
-            return Product;
-        }
         /// <summary>
         /// Метод для создания продукта
         /// </summary>
@@ -39,6 +35,10 @@ namespace FCT_test.Model
             Product = product;
         }
 
+        /// <summary>
+        /// Метод для создания транзакции для отправления на склад
+        /// </summary>
+        /// <returns></returns>
         public Transaction MakeTransaction()
         {
             return new Transaction(Name, Product, Performance, Product.Weight * Performance);

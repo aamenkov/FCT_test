@@ -13,6 +13,6 @@ namespace FCT_test.Inteface
     public interface IProductFactory
     {
         public void MakeProduct(string name, string packageType, int weight);
-        public Product MakeProduct();
+        public Transaction MakeTransaction();
     }
 }

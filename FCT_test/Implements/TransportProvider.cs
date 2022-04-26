@@ -5,24 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using FCT_test.Inteface;
 using FCT_test.Model;
-using Microsoft.VisualBasic;
 
 namespace FCT_test.Implements
 {
     public class TransportProvider : ITransportProvider
     {
-        private Stock stock = Model.Stock.GetInstance("", 0);
+        private readonly Stock _stock = Model.Stock.GetInstance("", 0);
         public bool Transport(AbstractTruck truck)
         {
-            if ((stock.isEmpty == false) && (stock.isFull == true))
+            if ((_stock.IsEmpty == false) && (_stock.IsFull == true))
             {
-                stock.LoadCar(truck);
-                if (stock.Capacity == 0)
+                _stock.LoadCar(truck);
+                if (_stock.Capacity == 0)
                 {
-                    stock.AlarmStockIsEmpty();
+                    _stock.SetEmpty();
                 }
             }
-            return stock.isEmpty;
+            return _stock.IsEmpty;
         }
     }
 }

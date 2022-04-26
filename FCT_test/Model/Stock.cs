@@ -13,40 +13,40 @@ namespace FCT_test.Model
     /// </summary>
     public class Stock
     {
-        private static Stock instanceStock; 
+        private static Stock _instanceStock; 
         public string Name { get; }
         public int Capacity { get; private set; }
         public int MaxCapacity { get; }
-        private ConcurrentDictionary<Product, int> Dictionary { get; } 
-        public bool isFull { get; private set; }
-        public bool isEmpty { get; private set; }
+        public ConcurrentDictionary<Product, int> Dictionary { get; } 
+        public bool IsFull { get; private set; }
+        public bool IsEmpty { get; private set; }
         private Stock(string name, int maxCapacity)
         {
             Name = name;
             Capacity = 0;
             MaxCapacity = maxCapacity;
             Dictionary = new ConcurrentDictionary<Product, int>();
-            isFull = false;
-            isEmpty = false;
+            IsFull = false;
+            IsEmpty = false;
         }
 
         public static Stock GetInstance(string name, int maxCapacity)
         {
-            if (instanceStock == null)
+            if (_instanceStock == null)
             {
-                instanceStock = new Stock(name, maxCapacity);
+                _instanceStock = new Stock(name, maxCapacity);
             }
-            return instanceStock;
+            return _instanceStock;
         }
 
-        public void AlarmStockIsFull()
+        public void SetFull()
         {
-            isFull = true;
+            IsFull = true;
         }
 
-        public void AlarmStockIsEmpty()
+        public void SetEmpty()
         {
-            isEmpty = true;
+            IsEmpty = true;
         }
 
         /// <summary>
@@ -79,19 +79,14 @@ namespace FCT_test.Model
         /// <param name="truck"></param>
         public void LoadCar(AbstractTruck truck)
         {
-            //delaet tol'kjo одну итерацию, обе машины машина уменьшеают сток и уехжает остальные не киеньшают
-            //все в складе зануляется
             foreach (var pair in Dictionary)
             {
                 Dictionary.TryGetValue(pair.Key, out var val);
-                while ((truck.MaxCapacity - truck.Capacity >= pair.Key.Weight) && (val > 0))
+                while ((val > 0) && (truck.MaxCapacity - truck.Capacity >= pair.Key.Weight))
                 {
                     truck.AddProduct(pair.Key);
-                    //Console.WriteLine(val);
                     Dictionary[pair.Key] = val - 1;
-                    //Console.WriteLine(pair);
                     Capacity = Capacity - pair.Key.Weight;
-                    //Console.WriteLine(Capacity.ToString(), pair.Key.Weight);
                     Dictionary.TryGetValue(pair.Key, out val);
                 }
             }

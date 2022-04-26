@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace FCT_test.Model
 {
     /// <summary>
-    /// Абстрактный класс для грузовых машин, осуществляющих доставку
+    /// Абстрактный класс для грузовых машин, осуществляющих транспортировку
     /// </summary>
     public abstract class AbstractTruck
     {
@@ -24,6 +24,10 @@ namespace FCT_test.Model
             Dictionary = new ConcurrentDictionary<Product, int>();
         }
 
+        /// <summary>
+        /// Метод для загрузки продукта в транспортное средство
+        /// </summary>
+        /// <param name="product"></param>
         public void AddProduct(Product product)
         {
             if (Dictionary.TryGetValue(product, out var val))

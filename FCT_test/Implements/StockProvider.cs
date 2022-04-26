@@ -10,18 +10,18 @@ namespace FCT_test.Implements
 {
     public class StockProvider : IStockProvider
     {
-        private Stock stock = Model.Stock.GetInstance("", 0);
+        private readonly Stock _stock = Model.Stock.GetInstance("", 0);
         public bool Stock(Transaction transaction)
         {
-            if (stock.isFull == false)
+            if (_stock.IsFull == false)
             {
-                stock.Put(transaction);
-                if (stock.Capacity > 0.95 * stock.MaxCapacity)
+                _stock.Put(transaction);
+                if (_stock.Capacity > 0.95 * _stock.MaxCapacity)
                 {
-                    stock.AlarmStockIsFull();
+                    _stock.SetFull();
                 }
             }
-            return stock.isFull;
+            return _stock.IsFull;
         }
     }
 }
