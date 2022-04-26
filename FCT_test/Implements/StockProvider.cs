@@ -23,6 +23,5 @@ namespace FCT_test.Implements
             }
             return stock.isFull;
         }
-
     }
 }
