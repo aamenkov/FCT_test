@@ -11,17 +11,17 @@ namespace FCT_test.Implements
     public class StockProvider : IStockProvider
     {
         private Stock stock = Model.Stock.GetInstance("", 0);
-
-        public void Stock(Transaction transaction)
+        public bool Stock(Transaction transaction)
         {
-            stock.Put(transaction);
-
-            if (stock.Capacity > 0.95 * stock.MaxCapacity)
+            if (stock.isFull == false)
             {
-                // TODO: машинки поехали
-                // заполняется ли в это время склад...
-
+                stock.Put(transaction);
+                if (stock.Capacity > 0.95 * stock.MaxCapacity)
+                {
+                    stock.AlarmStockIsFull();
+                }
             }
+            return stock.isFull;
         }
 
     }

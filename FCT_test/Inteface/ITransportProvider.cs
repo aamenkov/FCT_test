@@ -12,6 +12,6 @@ namespace FCT_test.Inteface
     /// </summary>
     public interface ITransportProvider
     {
-        public void Transport(AbstractTruck truck);
+        public bool Transport(AbstractTruck truck);
     }
 }

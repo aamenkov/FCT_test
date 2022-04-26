@@ -12,6 +12,6 @@ namespace FCT_test.Inteface
     /// </summary>
     public interface IStockProvider
     {
-        public void Stock(Transaction transaction);
+        public bool Stock(Transaction transaction);
     }
 }

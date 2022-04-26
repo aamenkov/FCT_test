@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NLog;
 
 namespace FCT_test.Model
 {
@@ -17,13 +18,16 @@ namespace FCT_test.Model
         public int Capacity { get; private set; }
         public int MaxCapacity { get; }
         private ConcurrentDictionary<Product, int> Dictionary { get; } 
-
+        public bool isFull { get; private set; }
+        public bool isEmpty { get; private set; }
         private Stock(string name, int maxCapacity)
         {
             Name = name;
             Capacity = 0;
             MaxCapacity = maxCapacity;
             Dictionary = new ConcurrentDictionary<Product, int>();
+            isFull = false;
+            isEmpty = false;
         }
 
         public static Stock GetInstance(string name, int maxCapacity)
@@ -33,6 +37,16 @@ namespace FCT_test.Model
                 instanceStock = new Stock(name, maxCapacity);
             }
             return instanceStock;
+        }
+
+        public void AlarmStockIsFull()
+        {
+            isFull = true;
+        }
+
+        public void AlarmStockIsEmpty()
+        {
+            isEmpty = true;
         }
 
         /// <summary>
@@ -65,17 +79,20 @@ namespace FCT_test.Model
         /// <param name="truck"></param>
         public void LoadCar(AbstractTruck truck)
         {
+            //delaet tol'kjo одну итерацию, обе машины машина уменьшеают сток и уехжает остальные не киеньшают
+            //все в складе зануляется
             foreach (var pair in Dictionary)
             {
-                while (pair.Key.Weight < truck.MaxCapacity - truck.Capacity)
+                Dictionary.TryGetValue(pair.Key, out var val);
+                while ((truck.MaxCapacity - truck.Capacity >= pair.Key.Weight) && (val > 0))
                 {
-                    if (pair.Value > 0)
-                    { 
-                        truck.AddProduct(pair.Key);
-                        Dictionary.TryGetValue(pair.Key, out var val);
-                        Dictionary[pair.Key] = val - 1;
-                        Capacity = Capacity - pair.Key.Weight;
-                    }
+                    truck.AddProduct(pair.Key);
+                    //Console.WriteLine(val);
+                    Dictionary[pair.Key] = val - 1;
+                    //Console.WriteLine(pair);
+                    Capacity = Capacity - pair.Key.Weight;
+                    //Console.WriteLine(Capacity.ToString(), pair.Key.Weight);
+                    Dictionary.TryGetValue(pair.Key, out val);
                 }
             }
         }
@@ -87,7 +104,7 @@ namespace FCT_test.Model
 
         public string FullInfoToString()
         {
-            string dictionaryString = ToString() + " Dictionary: {";
+            var dictionaryString = ToString() + " Dictionary: {";
             foreach (var keyValues in Dictionary)
             {
                 dictionaryString += keyValues.Key + " : " + keyValues.Value + ", ";

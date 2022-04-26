@@ -11,14 +11,17 @@ namespace FCT_test.Implements
     public class TransportProvider : ITransportProvider
     {
         private Stock stock = Model.Stock.GetInstance("", 0);
-        public void Transport(AbstractTruck truck)
+        public bool Transport(AbstractTruck truck)
         {
-            // разгрузка склада
-
-            if (stock.Capacity > 0)
+            if (stock.isEmpty == false)
             {
                 stock.LoadCar(truck);
+                if (stock.Capacity == 0)
+                {
+                    stock.AlarmStockIsEmpty();
+                }
             }
+            return stock.isEmpty;
         }
     }
 }

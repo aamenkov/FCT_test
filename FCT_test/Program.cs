@@ -14,25 +14,27 @@ namespace FCT_test
         private static int factoryCount = 3;
         private static int trucksCount = 2;
         private static int productsPerHour = 100;
-        private static int stockCoef = 10;
+        private static int stockCoef = 100;
         static void Main(string[] args)
         {
             var q = productsPerHour * 1.1 / productsPerHour;
             var stockMaxCapacity = (int)(stockCoef * 1.5 * (productsPerHour * (1 - Math.Pow(q, factoryCount)) / (1 - q)));
-            // logger.Info(q);
-            // logger.Info(stockMaxCapacity);
 
             var stock = Stock.GetInstance("MainStock", stockMaxCapacity);
             logger.Info(stock.ToString());
-            //   logger.Info(stock.FullInfoToString());
+            //logger.Info(stock.FullInfoToString());
 
+            //Thread threadIn = new Thread(Zapolnenie);
+            //threadIn.Start();
+            //Thread threadOut = new Thread(Razgruzka);
+            //threadOut.Start();
 
-            Thread threadIn = new Thread(Zapolnenie);
-            threadIn.Start();
-
-            Thread threadOut = new Thread(Razgruzka);
-            threadOut.Start();
-
+            logger.Info(stock.FullInfoToString());
+            Zapolnenie();
+            logger.Info(stock.FullInfoToString());
+            logger.Info(stock.FullInfoToString());
+            logger.Info(stock.FullInfoToString());
+            Razgruzka();
             logger.Info(stock.FullInfoToString());
         }
 
@@ -46,16 +48,15 @@ namespace FCT_test
                 var factory = new Factory("Factory" + i, (int)(productsPerHour * (1 + (double)i / 10)));
                 factory.MakeProduct("Product" + i, "Plastic" + i, i % 2 + 1);
                 factoryList.Add(factory);
-                logger.Info(factory.ToString());
-                
+                logger.Info("FACTORY: " + factory.ToString());
             }
-
-            while (true)
+            var isFull = false;
+            while (!isFull)
             {
                 foreach (var factory in factoryList)
                 {
                     var transaction = factory.MakeTransaction();
-                    stockProvider.Stock(transaction);
+                    isFull = stockProvider.Stock(transaction);
                     logger.Info("TO STOCK: " + transaction.ToString());
                 }
             }
@@ -65,27 +66,28 @@ namespace FCT_test
         {
             var transportProvider = new TransportProvider();
 
-            var truckList = new List<Truck>();
-            for (var y = 0; y < trucksCount; y++)
+            var isEmpty = false;
+            while (!isEmpty)
             {
-                var truck = new Truck("Truck" + y, (int)(productsPerHour * (1 + (double)y / 3)));
-                truckList.Add(truck);
-                logger.Info(truck.ToString());
-            }
+                var truckList = new List<Truck>();
 
-            Stock stock = Model.Stock.GetInstance("", 0);
-            if (stock.Capacity > 0.95 * stock.MaxCapacity)
-            {
-                while (true)
+                for (var y = 0; y < trucksCount; y++)
                 {
-                    foreach (var truck in truckList)
-                    {
-                        transportProvider.Transport(truck);
-                        logger.Info(truck.ToString());
-                    }
+                    var truck = new Truck("Truck" + y, (int)(productsPerHour * (1 + (double)y / 3)));
+                    truckList.Add(truck);
+                    //logger.Info("TRUCK: " + truck.ToString());
                 }
-            }
 
+                foreach (var truck in truckList)
+                {
+                    isEmpty = transportProvider.Transport(truck);
+                    logger.Info("TO SHOP: " + truck.ToString());
+                    Stock stock = Model.Stock.GetInstance("", 0);
+                    logger.Info("AfterShop: " + stock.FullInfoToString());
+                }
+                Stock stock1 = Model.Stock.GetInstance("", 0);
+                //logger.Info("AfterForEach: " + stock1.FullInfoToString());
+            }
         }
 
     }
